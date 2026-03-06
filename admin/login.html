@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Admin - Restaurante</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; }
+    .login { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    input { display: block; margin: 10px 0; padding: 10px; width: 100%; }
+    button { padding: 10px; width: 100%; background: #007bff; color: white; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="login">
+    <h2>Login Administrador</h2>
+    <input type="text" id="usuario" placeholder="Usuario">
+    <input type="password" id="contraseña" placeholder="Contraseña">
+    <button onclick="login()">Iniciar Sesión</button>
+  </div>
+  <script>
+    async function login() {
+      const usuario = document.getElementById('usuario').value;
+      const contraseña = document.getElementById('contraseña').value;
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usuario, contraseña })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem('token', data.token);
+        window.location.href = 'dashboard.html';
+      } else {
+        alert(data.message);
+      }
+    }
+  </script>
+</body>
+</html>

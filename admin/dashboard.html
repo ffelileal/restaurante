@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel Admin - Restaurante</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+    .nav { margin-bottom: 20px; }
+    .nav button { margin-right: 10px; padding: 10px; }
+    .section { display: none; }
+    .active { display: block; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    canvas { max-width: 400px; }
+  </style>
+</head>
+<body>
+  <h1>Panel de Administración</h1>
+  <div class="nav">
+    <button onclick="showSection('pedidos')">Pedidos</button>
+    <button onclick="showSection('stock')">Stock</button>
+    <button onclick="showSection('graficos')">Gráficos</button>
+    <button onclick="showSection('menu')">Gestión Menú</button>
+  </div>
+  <div id="pedidos" class="section active">
+    <h2>Pedidos</h2>
+    <table id="pedidosTable">
+      <thead>
+        <tr><th>Cliente</th><th>Productos</th><th>Total</th><th>Pago</th><th>Fecha</th><th>Estado</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div id="stock" class="section">
+    <h2>Stock</h2>
+    <table id="stockTable">
+      <thead>
+        <tr><th>Producto</th><th>Stock</th><th>Acción</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div id="graficos" class="section">
+    <h2>Gráficos</h2>
+    <canvas id="pedidosChart"></canvas>
+    <canvas id="ventasChart"></canvas>
+  </div>
+  <div id="menu" class="section">
+    <h2>Gestión Menú</h2>
+    <table id="menuTable">
+      <thead>
+        <tr><th>Producto</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) window.location.href = 'login.html';
+
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      if (id === 'pedidos') loadPedidos();
+      if (id === 'stock') loadStock();
+      if (id === 'graficos') loadGraficos();
+      if (id === 'menu') loadMenu();
+    }
+
+    async function loadPedidos() {
+      const res = await fetch('/api/pedidos', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const pedidos = await res.json();
+      const tbody = document.querySelector('#pedidosTable tbody');
+      tbody.innerHTML = pedidos.map(p => `
+        <tr>
+          <td>${p.cliente.nombre}</td>
+          <td>${p.productos.map(pr => pr.nombre + ' x' + pr.qty).join(', ')}</td>
+          <td>$${p.total}</td>
+          <td>${p.pago}</td>
+          <td>${new Date(p.fechaPedido).toLocaleDateString()}</td>
+          <td>${p.estado}</td>
+        </tr>
+      `).join('');
+    }
+
+    async function loadStock() {
+      const res = await fetch('/api/productos');
+      const productos = await res.json();
+      const tbody = document.querySelector('#stockTable tbody');
+      tbody.innerHTML = productos.map(p => `
+        <tr>
+          <td>${p.nombre}${p.informacion ? '<br><small>' + p.informacion + '</small>' : ''}</td>
+          <td>${p.stock}</td>
+          <td><input type="number" value="${p.stock}" onchange="updateStock('${p._id}', this.value)"></td>
+        </tr>
+      `).join('');
+    }
+
+    async function updateStock(id, stock) {
+      await fetch(`/api/producto/stock/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ stock: parseInt(stock) })
+      });
+    }
+
+    async function loadGraficos() {
+      // Simular datos
+      new Chart(document.getElementById('pedidosChart'), {
+        type: 'line',
+        data: { labels: ['Lun', 'Mar', 'Mie'], datasets: [{ label: 'Pedidos', data: [5, 10, 8] }] }
+      });
+      new Chart(document.getElementById('ventasChart'), {
+        type: 'bar',
+        data: { labels: ['Producto A', 'Producto B'], datasets: [{ label: 'Ventas', data: [100, 200] }] }
+      });
+    }
+
+    async function loadMenu() {
+      const res = await fetch('/api/productos');
+      const productos = await res.json();
+      const tbody = document.querySelector('#menuTable tbody');
+      tbody.innerHTML = productos.map(p => `
+        <tr>
+          <td>${p.nombre}${p.informacion ? '<br><small>' + p.informacion + '</small>' : ''}</td>
+          <td><input type="number" value="${p.precio}"></td>
+          <td><input type="number" value="${p.stock}"></td>
+          <td><button>Guardar</button></td>
+        </tr>
+      `).join('');
+    }
+
+    showSection('pedidos');
+  </script>
+</body>
+</html>

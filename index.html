@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="La Casona — Pastas, Pizzas y Tartas caseras. Pedí online." />
+  <title>La Casona 🍝 Comida Casera</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Favicon emoji -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍝</text></svg>" />
+</head>
+<body>
+
+<!-- ============================================================
+     NAVBAR
+     ============================================================ -->
+<nav class="navbar" role="navigation" aria-label="Navegación principal">
+  <div class="navbar__brand" onclick="navigate('inicio')" style="cursor:pointer" role="link" aria-label="Inicio">
+    <div class="navbar__logo-icon" aria-hidden="true">🍝</div>
+    <span class="navbar__name">La Casona</span>
+  </div>
+
+  <!-- Hamburger (mobile) -->
+  <button class="navbar__hamburger" id="hamburger" onclick="toggleMobileMenu()"
+    aria-label="Abrir menú" aria-expanded="false" aria-controls="navbar-nav">
+    <span></span><span></span><span></span>
+  </button>
+
+  <!-- Links de navegación -->
+  <div class="navbar__nav" id="navbar-nav" role="menubar">
+    <a class="navbar__link" data-page="inicio"   onclick="navigate('inicio');toggleMobileMenu()" role="menuitem" tabindex="0">Inicio</a>
+    <a class="navbar__link" data-page="pastas"   onclick="navigate('pastas');toggleMobileMenu()" role="menuitem" tabindex="0">Pastas</a>
+    <a class="navbar__link" data-page="pizzas"   onclick="navigate('pizzas');toggleMobileMenu()" role="menuitem" tabindex="0">Pizzas</a>
+    <a class="navbar__link" data-page="tartas"   onclick="navigate('tartas');toggleMobileMenu()" role="menuitem" tabindex="0">Tartas</a>
+    <!-- Botón carrito -->
+    <button class="navbar__cart-btn" onclick="openCart()" aria-label="Ver carrito">
+      🛒 Carrito
+      <span class="cart-badge hidden" id="cart-badge" aria-live="polite">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ============================================================
+     PANEL CARRITO (lateral)
+     ============================================================ -->
+<div class="cart-overlay" id="cart-overlay" onclick="closeCart()" aria-hidden="true"></div>
+<aside class="cart-panel" id="cart-panel" role="dialog" aria-label="Carrito de compras">
+  <div class="cart-panel__header">
+    <h2 class="cart-panel__title">🛒 Tu pedido</h2>
+    <button class="cart-panel__close" onclick="closeCart()" aria-label="Cerrar carrito">✕</button>
+  </div>
+  <div class="cart-panel__body" id="cart-body">
+    <!-- Ítems se insertan vía JS -->
+  </div>
+  <div class="cart-panel__footer">
+    <div class="cart-total">
+      <span class="cart-total__label">Total estimado</span>
+      <span class="cart-total__val" id="cart-total-val">$0</span>
+    </div>
+    <button class="cart-checkout-btn" onclick="closeCart(); navigate('checkout')">
+      💳 Continuar al pago →
+    </button>
+  </div>
+</aside>
+
+<!-- ============================================================
+     TOAST
+     ============================================================ -->
+<div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+<!-- ============================================================
+     WhatsApp FAB
+     ============================================================ -->
+<a class="wa-fab" onclick="openWhatsApp()" aria-label="Contactar por WhatsApp" role="button">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<!-- ============================================================
+     PÁGINAS (SPA — solo la activa es visible)
+     ============================================================ -->
+
+<!-- ======= PÁGINA: INICIO ======= -->
+<main id="page-inicio" class="page" role="main">
+  <section class="hero" aria-label="Bienvenida">
+    <div class="hero__pattern" aria-hidden="true"></div>
+    <div class="hero__emoji-ring" aria-hidden="true">🍝</div>
+    <p class="hero__eyebrow">Comida casera de autor</p>
+    <h1 class="hero__title">
+      Sabor de <em>casa</em>,<br>entregado a tu puerta
+    </h1>
+    <p class="hero__subtitle">
+      Pastas artesanales, pizzas al molde y tartas horneadas cada día.
+      Pedí online y recibí el calor del hogar.
+    </p>
+    <div class="hero__cards" role="list">
+      <div class="hero__card" onclick="navigate('pastas')" role="listitem button" tabindex="0"
+           aria-label="Ver pastas" onkeydown="if(event.key==='Enter')navigate('pastas')">
+        <div class="hero__card-icon" aria-hidden="true">🥟</div>
+        <div class="hero__card-label">Pastas</div>
+        <div class="hero__card-count">7 variedades</div>
+      </div>
+      <div class="hero__card" onclick="navigate('pizzas')" role="listitem button" tabindex="0"
+           aria-label="Ver pizzas" onkeydown="if(event.key==='Enter')navigate('pizzas')">
+        <div class="hero__card-icon" aria-hidden="true">🍕</div>
+        <div class="hero__card-label">Pizzas</div>
+        <div class="hero__card-count">6 variedades</div>
+      </div>
+      <div class="hero__card" onclick="navigate('tartas')" role="listitem button" tabindex="0"
+           aria-label="Ver tartas" onkeydown="if(event.key==='Enter')navigate('tartas')">
+        <div class="hero__card-icon" aria-hidden="true">🥧</div>
+        <div class="hero__card-label">Tartas</div>
+        <div class="hero__card-count">4 variedades</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Info rápida -->
+  <section style="max-width:900px;margin:0 auto;padding:3rem 1.2rem 4rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.2rem;">
+    <div style="background:var(--white);border-radius:var(--radius-md);padding:1.4rem;box-shadow:var(--shadow-sm);text-align:center">
+      <div style="font-size:2rem;margin-bottom:.5rem">⏱️</div>
+      <h3 style="font-size:1rem;margin-bottom:.3rem">Envío rápido</h3>
+      <p style="font-size:.85rem;color:var(--gray-mid)">Entrega estimada en 40–60 min.</p>
+    </div>
+    <div style="background:var(--white);border-radius:var(--radius-md);padding:1.4rem;box-shadow:var(--shadow-sm);text-align:center">
+      <div style="font-size:2rem;margin-bottom:.5rem">👩‍🍳</div>
+      <h3 style="font-size:1rem;margin-bottom:.3rem">Elaboración propia</h3>
+      <p style="font-size:.85rem;color:var(--gray-mid)">Cada plato, preparado con amor ese mismo día.</p>
+    </div>
+    <div style="background:var(--white);border-radius:var(--radius-md);padding:1.4rem;box-shadow:var(--shadow-sm);text-align:center">
+      <div style="font-size:2rem;margin-bottom:.5rem">📦</div>
+      <h3 style="font-size:1rem;margin-bottom:.3rem">Retiro o delivery</h3>
+      <p style="font-size:.85rem;color:var(--gray-mid)">Pasá a buscarlo o pedí que te lo llevemos.</p>
+    </div>
+  </section>
+</main>
+
+<!-- ======= PÁGINA: PASTAS ======= -->
+<main id="page-pastas" class="page" role="main">
+  <header class="section-header" data-emoji="🥟" aria-label="Sección pastas">
+    <p class="section-header__eyebrow">Menú</p>
+    <h1 class="section-header__title">Pastas Artesanales</h1>
+    <p class="section-header__desc">Elaboradas con masa fresca todos los días. Porciones para dos.</p>
+  </header>
+  <section class="products-section" aria-label="Listado de pastas">
+    <div class="products-grid" id="grid-pastas" role="list">
+      <!-- Productos insertados por JS -->
+    </div>
+  </section>
+</main>
+
+<!-- ======= PÁGINA: PIZZAS ======= -->
+<main id="page-pizzas" class="page" role="main">
+  <header class="section-header" data-emoji="🍕" aria-label="Sección pizzas">
+    <p class="section-header__eyebrow">Menú</p>
+    <h1 class="section-header__title">Pizzas al Molde</h1>
+    <p class="section-header__desc">Masa alta, dorada y esponjosa. La pizza de siempre, en su punto justo.</p>
+  </header>
+  <section class="products-section" aria-label="Listado de pizzas">
+    <div class="products-grid" id="grid-pizzas" role="list">
+      <!-- Productos insertados por JS -->
+    </div>
+  </section>
+</main>
+
+<!-- ======= PÁGINA: TARTAS ======= -->
+<main id="page-tartas" class="page" role="main">
+  <header class="section-header" data-emoji="🥧" aria-label="Sección tartas">
+    <p class="section-header__eyebrow">Menú</p>
+    <h1 class="section-header__title">Tartas Caseras</h1>
+    <p class="section-header__desc">Rellenos generosos, masa crocante. Cortadas al momento de tu pedido.</p>
+  </header>
+  <section class="products-section" aria-label="Listado de tartas">
+    <div class="products-grid" id="grid-tartas" role="list">
+      <!-- Productos insertados por JS -->
+    </div>
+  </section>
+</main>
+
+<!-- ======= PÁGINA: CHECKOUT ======= -->
+<main id="page-checkout" class="page" role="main">
+  <div class="checkout-section">
+    <h2>💳 Finalizá tu pedido</h2>
+
+    <!-- Resumen del carrito -->
+    <div class="checkout-block">
+      <h3>🛒 Resumen de tu pedido</h3>
+      <div id="checkout-summary">
+        <!-- Insertado por JS -->
+      </div>
+    </div>
+
+    <!-- Métodos de pago -->
+    <div class="checkout-block">
+      <h3>Elegí cómo pagás</h3>
+      <div class="payment-options" role="radiogroup" aria-label="Métodos de pago">
+
+        <label class="payment-option" data-method="transferencia" onclick="selectPayment('transferencia')">
+          <input type="radio" name="payment" value="transferencia" aria-label="Transferencia bancaria" />
+          <div>
+            <div class="payment-option__label">🏦 Transferencia bancaria</div>
+            <div class="payment-option__desc">Transferí al CBU y envianos el comprobante por WhatsApp.</div>
+            <!-- CBU editable: modificar CONFIG.cbu en js/app.js -->
+            <div class="cbu-display" id="cbu-block" style="display:none">
+              CBU: <strong id="cbu-value"></strong>
+            </div>
+          </div>
+        </label>
+
+        <label class="payment-option" data-method="tarjeta" onclick="selectPayment('tarjeta')">
+          <input type="radio" name="payment" value="tarjeta" aria-label="Tarjeta de crédito o débito" />
+          <div>
+            <div class="payment-option__label">💳 Tarjeta (crédito / débito)</div>
+            <div class="payment-option__desc">Coordinamos el pago al momento de la entrega o retiro.</div>
+          </div>
+        </label>
+
+        <label class="payment-option" data-method="efectivo" onclick="selectPayment('efectivo')">
+          <input type="radio" name="payment" value="efectivo" aria-label="Efectivo al retirar o recibir" />
+          <div>
+            <div class="payment-option__label">💵 Efectivo al retirar o recibir</div>
+            <div class="payment-option__desc">Pagás en el momento, sin complicaciones.</div>
+          </div>
+        </label>
+
+      </div>
+    </div>
+
+    <!-- Notas / dirección (campo libre) -->
+    <div class="checkout-block">
+      <div class="checkout-block">
+  <h3>📍 Tus Datos</h3>
+  <input type="text" id="checkout-name" placeholder="Tu Nombre" style="width:100%; margin-bottom:10px; padding:10px;">
+  <input type="text" id="checkout-phone" placeholder="Tu Teléfono (WhatsApp)" style="width:100%; margin-bottom:10px; padding:10px;">
+  <textarea id="checkout-address" rows="3" placeholder="Dirección de entrega..." style="width:100%; padding:10px;"></textarea>
+</div>
+    </div>
+
+    <button class="checkout-confirm-btn" onclick="confirmOrder()" aria-label="Confirmar pedido">
+      ✅ Confirmar pedido
+    </button>
+
+    <p style="text-align:center;margin-top:1rem;font-size:.82rem;color:var(--gray-mid)">
+      Al confirmar, se generará un mensaje de WhatsApp con el detalle de tu pedido.
+    </p>
+  </div>
+</main>
+
+<!-- ======= PÁGINA: CONFIRMACIÓN ======= -->
+<main id="page-confirm" class="page" role="main">
+  <div class="confirm-section">
+    <div class="confirm-icon" aria-hidden="true">🎉</div>
+    <h2>¡Pedido confirmado!</h2>
+    <p>Gracias por elegirnos. Presioná el botón para enviarnos tu pedido por WhatsApp y lo ponemos en marcha.</p>
+
+    <div class="confirm-summary">
+      <h3>📋 Detalle del pedido</h3>
+      <div id="confirm-summary-list">
+        <!-- Insertado por JS -->
+      </div>
+      <p style="margin-top:.8rem;font-size:.85rem;color:var(--gray-mid)">
+        Método de pago: <strong id="confirm-payment"></strong>
+      </p>
+    </div>
+
+    <button class="whatsapp-btn" onclick="sendWhatsApp()" aria-label="Enviar pedido por WhatsApp">
+      <!-- WhatsApp SVG icon -->
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+      Enviar pedido por WhatsApp
+    </button>
+
+    <div style="margin-top:2rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+      <button onclick="navigate('inicio')"
+        style="background:var(--cream-dark);color:var(--earth);padding:.7rem 1.4rem;border-radius:var(--radius-sm);font-weight:600;font-size:.9rem;cursor:pointer;border:none;font-family:inherit;transition:background .3s"
+        onmouseover="this.style.background='var(--earth-mid)';this.style.color='var(--cream)'"
+        onmouseout="this.style.background='var(--cream-dark)';this.style.color='var(--earth)'">
+        ← Volver al inicio
+      </button>
+      <button onclick="navigate('pastas')"
+        style="background:var(--cream-dark);color:var(--earth);padding:.7rem 1.4rem;border-radius:var(--radius-sm);font-weight:600;font-size:.9rem;cursor:pointer;border:none;font-family:inherit;transition:background .3s"
+        onmouseover="this.style.background='var(--earth-mid)';this.style.color='var(--cream)'"
+        onmouseout="this.style.background='var(--cream-dark)';this.style.color='var(--earth)'">
+        🍝 Ver más opciones
+      </button>
+    </div>
+  </div>
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer role="contentinfo">
+  <p>© 2025 <span>La Casona</span> · Comida casera con amor 🍝</p>
+  <p style="margin-top:.3rem;font-size:.78rem;opacity:.7">
+    Precios sujetos a cambio · Info nutricional estimada · Imágenes ilustrativas
+  </p>
+</footer>
+
+<!-- JS al final del body -->
+<script src="app.js"></script>
+</body>
+</html>
