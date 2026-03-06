@@ -69,7 +69,7 @@
     }
 
     async function loadPedidos() {
-      const res = await fetch('/api/pedidos', {
+      const res = await fetch('http://localhost:3000/pedidos', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const pedidos = await res.json();
@@ -87,7 +87,7 @@
     }
 
     async function loadStock() {
-      const res = await fetch('/api/productos');
+      const res = await fetch('http://localhost:3000/productos');
       const productos = await res.json();
       const tbody = document.querySelector('#stockTable tbody');
       tbody.innerHTML = productos.map(p => `
@@ -100,7 +100,7 @@
     }
 
     async function updateStock(id, stock) {
-      await fetch(`/api/producto/stock/${id}`, {
+      await fetch(`http://localhost:3000/producto/stock/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ stock: parseInt(stock) })
@@ -120,7 +120,7 @@
     }
 
     async function loadMenu() {
-      const res = await fetch('/api/productos');
+      const res = await fetch('http://localhost:3000/productos');
       const productos = await res.json();
       const tbody = document.querySelector('#menuTable tbody');
       tbody.innerHTML = productos.map(p => `

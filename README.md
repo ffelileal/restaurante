@@ -57,16 +57,11 @@ Para reiniciar automáticamente al encender la PC, crea un acceso directo al arc
 - Copia el archivo `iniciar_servidor.bat` ahí
 
 ### 7. Abrir frontend
-- Web del restaurante: https://restaurante-panel.vercel.app
-- Panel admin: https://restaurante-panel.vercel.app/admin/login.html
+Abre `index.html` en el navegador para la web del restaurante.
 
-### 9. Despliegue en Vercel
-El proyecto está desplegado en: https://restaurante-panel.vercel.app
+### 8. Abrir panel admin
+Ve a `admin/login.html` en el navegador.
 
-Para redeploy:
-```bash
-npx vercel --prod
-```
 
 ## Conexión Frontend-Backend
 El frontend envía pedidos a `http://localhost:3000/pedido` al confirmar.

@@ -21,13 +21,13 @@ const CONFIG = {
 // ============================================================
 const MENU = {
   pastas: [
-    { id:'p1', nombre:'Sorrentinos de Jamón y Queso', informacion:'', emoji:'🥟', precio:1800, cal:480, prot:22, carb:58, grasas:16 },
-    { id:'p2', nombre:'Panzottis de Espinaca y Muzzarella', informacion:'', emoji:'🥟', precio:1700, cal:420, prot:18, carb:52, grasas:14 },
-    { id:'p3', nombre:'Panzottis de Calabacín y Muzzarella', informacion:'', emoji:'🥟', precio:1700, cal:390, prot:15, carb:50, grasas:12 },
-    { id:'p4', nombre:'Panzottis de Espinaca y Carne', informacion:'', emoji:'🥟', precio:1900, cal:460, prot:26, carb:50, grasas:15 },
-    { id:'p5', nombre:'Lasagna', informacion:'', emoji:'🍝', precio:1600, cal:520, prot:28, carb:55, grasas:20 },
-    { id:'p6', nombre:'Canelones', informacion:'', emoji:'🍝', precio:1600, cal:490, prot:24, carb:52, grasas:18 },
-    { id:'p7', nombre:'Ñoquis', informacion:'', emoji:'🥔', precio:1400, cal:380, prot:12, carb:62, grasas:8  },
+    { id:'p1', nombre:'Sorrentinos de Jamón y Queso', informacion:'Jamón cocido, ricota y queso muzzarella. Ultracongelado en caja por 16 unidades', emoji:'🥟', precio:1800, cal:480, prot:22, carb:58, grasas:16 },
+    { id:'p2', nombre:'Panzottis de Espinaca y Muzzarella', informacion:'Espinaca y queso muzzarella. Ultracongelado en caja por 30 unidades', emoji:'🥟', precio:1700, cal:420, prot:18, carb:52, grasas:14 },
+    { id:'p3', nombre:'Panzottis de Calabacín y Muzzarella', informacion:'Calabacín, queso tybo, choclo cremoso amarillo y zanahoria. Ultracongelado en caja por 30 unidades', emoji:'🥟', precio:1700, cal:390, prot:15, carb:50, grasas:12 },
+    { id:'p4', nombre:'Panzottis de Espinaca y Carne', informacion:'Espinaca, ricota, queso muzzarella y carne molida especial. Ultracongelado en caja por 30 unidades', emoji:'🥟', precio:1900, cal:460, prot:26, carb:50, grasas:15 },
+    { id:'p5', nombre:'Lasagna', informacion:'Carne molida, espinaca, zanahoria, jamón cocido, queso tybo y sardo, salsa roja y blanca. Ultracongelada en bandeja por unidad (500g)', emoji:'🍝', precio:1600, cal:520, prot:28, carb:55, grasas:20 },
+    { id:'p6', nombre:'Canelones', informacion:'Carne molida especial, espinaca, salsa roja y blanca, y queso sardo. Ultracongelados en bandeja por 3 unidades', emoji:'🍝', precio:1600, cal:490, prot:24, carb:52, grasas:18 },
+    { id:'p7', nombre:'Ñoquis', informacion:'Sémola de trigo, manteca, queso parmesano y huevo. Ultracongelado en bandeja por 600g (crudo)', emoji:'🥔', precio:1400, cal:380, prot:12, carb:62, grasas:8  },
   ],
   pizzas: [
     { id:'z1', nombre:'Muzzarella', informacion:'jamón cocido, masa casera y aceitunas verdes (8 u). Envasada al vacío por unidad', emoji:'🍕', precio:1500, cal:640, prot:30, carb:70, grasas:26 },
@@ -38,10 +38,10 @@ const MENU = {
     { id:'z6', nombre:'Roquefort', informacion:'Muzzarella, queso roquefort, masa casera y aceitunas negras (8 u). Envasada al vacío por unidad', emoji:'🍕', precio:1500, cal:680, prot:28, carb:64, grasas:33 },
   ],
   tartas: [
-    { id:'t1', nombre:'Jamón y Queso', informacion:'', emoji:'🥧', precio:1200, cal:440, prot:20, carb:38, grasas:22 },
-    { id:'t2', nombre:'Pollo', informacion:'', emoji:'🥧', precio:1300, cal:420, prot:24, carb:36, grasas:18 },
-    { id:'t3', nombre:'Espinaca', informacion:'', emoji:'🥧', precio:1100, cal:360, prot:14, carb:35, grasas:17 },
-    { id:'t4', nombre:'Calabacín', informacion:'', emoji:'🥧', precio:1100, cal:340, prot:12, carb:34, grasas:16 },
+    { id:'t1', nombre:'Jamón y Queso', informacion:'Jamón, muzzarella, huevo, cebolla, masa de tarta y especias. Ultracongeladas por unidad', emoji:'🥧', precio:1200, cal:440, prot:20, carb:38, grasas:22 },
+    { id:'t2', nombre:'Pollo', informacion:'Pollo, muzzarella, cebolla, zanahoria, huevo, masa de tarta y especias. Ultracongeladas por unidad', emoji:'🥧', precio:1300, cal:420, prot:24, carb:36, grasas:18 },
+    { id:'t3', nombre:'Espinaca', informacion:'Espinaca, ricota, muzzarella, cebolla y masa de tarta. Ultracongeladas por unidad', emoji:'🥧', precio:1100, cal:360, prot:14, carb:35, grasas:17 },
+    { id:'t4', nombre:'Calabacín', informacion:'Calabacín, muzzarella, pimiento, cebolla, choclo cremoso amarillo, especias y masa de tarta. Ultracongeladas por unidad', emoji:'🥧', precio:1100, cal:340, prot:12, carb:34, grasas:16 },
   ],
 };
 
@@ -84,7 +84,7 @@ async function renderProducts(category) {
   container.innerHTML = 'Cargando...';
 
   try {
-    const res = await fetch('/api/productos');
+    const res = await fetch('http://localhost:3000/productos');
     const productos = await res.json();
     const filtered = productos.filter(p => p.categoria === category && p.stock > 0);
 
@@ -344,7 +344,7 @@ function sendWhatsApp() {
     pago: selectedPayment
   };
 
-  fetch('/api/pedido', {
+  fetch('http://localhost:3000/pedido', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(pedido)

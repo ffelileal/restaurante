@@ -229,13 +229,11 @@
 
     <!-- Notas / dirección (campo libre) -->
     <div class="checkout-block">
-      <div class="checkout-block">
-  <h3>📍 Tus Datos</h3>
-  <input type="text" id="checkout-name" placeholder="Tu Nombre" style="width:100%; margin-bottom:10px; padding:10px;">
-  <input type="text" id="checkout-phone" placeholder="Tu Teléfono (WhatsApp)" style="width:100%; margin-bottom:10px; padding:10px;">
-  <textarea id="checkout-address" rows="3" placeholder="Dirección de entrega..." style="width:100%; padding:10px;"></textarea>
+  <h3>📍 Tus Datos de Entrega</h3>
+  <input type="text" id="checkout-name" placeholder="Tu Nombre" style="width:100%; margin-bottom:10px; padding:10px; border:1px solid #ddd; border-radius:4px;">
+  <input type="text" id="checkout-phone" placeholder="Tu Teléfono (WhatsApp)" style="width:100%; margin-bottom:10px; padding:10px; border:1px solid #ddd; border-radius:4px;">
+  <textarea id="checkout-address" rows="3" placeholder="Dirección de entrega y aclaraciones..." style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;"></textarea>
 </div>
-    </div>
 
     <button class="checkout-confirm-btn" onclick="confirmOrder()" aria-label="Confirmar pedido">
       ✅ Confirmar pedido
