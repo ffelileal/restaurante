@@ -57,10 +57,9 @@ Para reiniciar automáticamente al encender la PC, crea un acceso directo al arc
 - Copia el archivo `iniciar_servidor.bat` ahí
 
 ### 7. Abrir frontend
-Abre `index.html` en el navegador para la web del restaurante.
-
-### 8. Abrir panel admin
-Ve a `admin/login.html` en el navegador.
+Inicia el backend (`npm start`) y visita:
+- http://localhost:3000/index.html para la web del restaurante.
+- http://localhost:3000/admin/login.html para el panel admin.
 
 
 ## Conexión Frontend-Backend

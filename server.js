@@ -11,6 +11,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Servir archivos estáticos AQUÍ (después de JSON, antes de endpoints)
+app.use(express.static(__dirname));
+
 // Conectar a MongoDB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('Conectado a MongoDB'))
@@ -55,6 +58,13 @@ app.put('/producto/stock/:id', authenticateToken, async (req, res) => {
   res.json({ message: 'Stock actualizado' });
 });
 
+// Actualizar precio de producto
+app.put('/producto/:id', authenticateToken, async (req, res) => {
+  const { precio } = req.body;
+  await Producto.findByIdAndUpdate(req.params.id, { precio });
+  res.json({ message: 'Precio actualizado' });
+});
+
 app.get('/pedidos', authenticateToken, async (req, res) => {
   const pedidos = await Pedido.find();
   res.json(pedidos);
@@ -68,6 +78,19 @@ app.post('/pedido', async (req, res) => {
     await Producto.findOneAndUpdate({ id: prod.id }, { $inc: { stock: -prod.qty } });
   }
   res.json({ message: 'Pedido guardado' });
+});
+
+// Actualizar estado de pedido
+app.put('/pedido/:id', authenticateToken, async (req, res) => {
+  const { estado } = req.body;
+  await Pedido.findByIdAndUpdate(req.params.id, { estado });
+  res.json({ message: 'Estado actualizado' });
+});
+
+// Eliminar pedido
+app.delete('/pedido/:id', authenticateToken, async (req, res) => {
+  await Pedido.findByIdAndDelete(req.params.id);
+  res.json({ message: 'Pedido eliminado' });
 });
 
 app.get('/estadisticas', authenticateToken, async (req, res) => {
